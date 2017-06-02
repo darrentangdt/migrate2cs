@@ -1,20 +1,15 @@
-% VMware to Apache CloudStack Migration
-% Will Stevens
-% 2016/03/30
-
-
 HOWTO USE THE TOOL
 ------------------
 
 Once everything is installed and `./settings.conf` has been configured, you can use the tool.  
-\ 
+
 
 ### Start the migration server UI
 ``` bash
 $ cd ~/migrate2cs
 $ nohup python ui_server_vmware.py > logs/server.log 2>&1&
 ```
-\ 
+
 
 ### Do a migration
 
@@ -25,7 +20,7 @@ $ nohup python ui_server_vmware.py > logs/server.log 2>&1&
 - To apply a specific Apache CloudStack configuration to a group of VMs, select the VMs by checking the associated check box and specify the Apache CloudStack details in the dropdowns, then click the `Apply to Selected VMs` button.
 - You can review the Apache CloudStack details in the expanded view of the VMs.
 - To begin the migration, make sure you have Apache CloudStack details applied to all the selected VMs, then click `Migrate Selected VMs`.  
-\ 
+
 
 ### View migration progress
 
@@ -38,7 +33,7 @@ $ nohup python ui_server_vmware.py > logs/server.log 2>&1&
     - 'vmware_api.log' (default name) - This log captures the information that VMware returns when the VMs are discovered (on page load).
     - 'cs_request.log' (default name) - This log captures the details of the api calls to Apache CloudStack.  This log is reset on each page load.
     - 'help.txt' - This is a help file to explain the different stages the migration progress goes through.  
-\ 
+
 
 
 INSTALLATION & SETUP
@@ -49,7 +44,7 @@ INSTALLATION & SETUP
 No changes should be required in the source VMware environment, but a user is required which has access to modify everything in the source VMware environment.  This is because VMs will be Stopped and then Exported from VMware and then migrated to the new Apache CloudStack environment.
 
 Review the configuration details in the `[VMWARE]` section of the `./settings.conf` config file below.  
-\ 
+
 
 ### The Migration Machine
 
@@ -62,13 +57,13 @@ Once the VM has been exported, if it has multiple disks, then the export is spli
 Once the files have been uploaded to Apache CloudStack, a new VM will be launched using the template and then the additional data volumes will be attached once the VM is up and running.
 
 The following describes how the Migration VM is configured...  
-\ 
+
 
 **Install EPEL**
 ``` bash
 $ rpm -ivh http://dl.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm
 ```
-\ 
+
 
 **Install PIP and Git**
 ``` bash
@@ -76,7 +71,7 @@ $ sudo yum install python-pip git
 $ sudo yum install python-devel
 $ sudo yum install gmp-devel
 ```
-\ 
+
 
 **Install python dependencies**
 ``` bash
@@ -89,7 +84,7 @@ $ sudo pip uninstall pycrypto
 $ sudo pip install pycrypto
 $ sudo pip install cpbmapi
 ```
-\ 
+
 
 **Get the source code**
 
@@ -99,7 +94,7 @@ To simplify later instructions, it is assumed that the code is pulled into the '
 $ cd ~/
 $ git clone https://github.com/swill/migrate2cs.git
 ```
-\ 
+
 
 **Install the OVFtool**
 
@@ -114,7 +109,7 @@ $ ./VMware-ovftool-3.5.0-1274719-lin.x86_64.sh
 Note that `sudo` may not work.  You my have to login as `root` to make the install work.  
 
 If this does not work, get the latest `ovftool` from: `https://www.vmware.com/support/developer/ovf/`  
-\ 
+
 
 **Setup where the OVA files will be stored**
 
@@ -125,7 +120,7 @@ $ mkdir -p /mnt/share
 $ mount -t nfs NFS_IP_OR_HOST:/PATH/TO/NFS/SHARE /mnt/share
 $ mkdir -p /mnt/share/ovas
 ```
-\ 
+
 
 **Setup a file server to serve the OVAs**
 
@@ -136,7 +131,7 @@ $ cp ~/migrate2cs/extras/file_server.py /mnt/share/ovas
 $ cd /mnt/share/ovas
 $ nohup python file_server.py -x .out &
 ```
-\ 
+
 
 **Setup the config file `./settings.conf`**
 
@@ -195,7 +190,7 @@ files_path = /mnt/share/ovas   ; this is where the files will get saved to and s
 ## debug = False
 ## port = 8787
 ```
-\ 
+
 
 
 UNDER THE HOOD
@@ -216,7 +211,7 @@ UNDER THE HOOD
     - 4 - Supports: ACE 2.x, ESX 3.x, Fusion 1.x, Player 2.x
     - 3 and 4 - Supports: ACE 1.x, Lab Manager 2.x, Player 1.x, Server 1.x, Workstation 5.x, Workstation 4.x
     - 3 - Supports: ESX 2.x, GSX Server 3.x  
-\ 
+
 
 ### The migration states
 
@@ -225,7 +220,7 @@ UNDER THE HOOD
 - imported - The VM has been imported into Apache CloudStack and the upload process has been kicked off.
 - launched - A transition state after the VM is launched in Apache CloudStack and before the migration has been cleaned up.
 - migrated - The VM has been successfully migrated to Apache CloudStack and is up and running.  
-\ 
+
 
 ### Migration state management
 
@@ -241,13 +236,13 @@ UNDER THE HOOD
     - `migrate_error` - A boolean that tracks if the current migration has errors.
     - `migration_timestamp` - The timestamp associated with the last migration.
     - `active_migration` - A boolean to specify if there is a migration currently happening.  
-\ 
+
 
 TROUBLESHOOTING
 ---------------
 
 Every system is slightly different and may not behave exactly as expected.  Here are some points to be aware of.  
-\ 
+
 
 ### Linux
 
@@ -265,9 +260,9 @@ $ sudo vim /etc/sysconfig/network-scripts/ifcfg-eth0
 $ sudo ifdown eth0
 $ sudo ifup eth0
 ```
-\ 
+
 
 ### Windows
 
 Periodically I have seen Windows boxes come up in a slightly confused state.  Rebooting the VM and selecting `Start Windows Normally` usually solves the problem.  
-\ 
+
